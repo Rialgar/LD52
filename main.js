@@ -27,8 +27,7 @@ function main(){
         imageData.data[redIndex+3] = 255
     }
 
-    const floaters = []
-
+    let floaters = []
     const map = {}
     let particles = []
 
@@ -165,14 +164,29 @@ function main(){
         step()
         ctx.putImageData(mainImageData, 0, 0)
         floaters.forEach(floater => {
-            floater.rotation += floater.rotationSpeed;
-            floater.x += floater.moveX;
-            floater.y += floater.moveY;
+            floater.opacity *= 0.999
 
-            floater.element.style.transform = `rotate(${floater.rotation}deg)`;
-            floater.element.style.left = `${floater.x}px`;
-            floater.element.style.top = `${floater.y}px`;
+            if(floater.opacity < 0.3){
+                floater.element.parentElement.removeChild(floater.element);
+            } else {
+                floater.rotation += floater.rotationSpeed;
+                floater.x += floater.moveX;
+                floater.y += floater.moveY;
+                
+                if(floater.x < 0 || floater.x + floater.width > width*scale){
+                    floater.moveX *= -1;
+                }
+                if(floater.y < 0 || floater.y + floater.height > height*scale){
+                    floater.moveY *= -1;
+                }
+
+                floater.element.style.transform = `rotate(${floater.rotation}deg)`;
+                floater.element.style.left = `${floater.x}px`;
+                floater.element.style.top = `${floater.y}px`;
+                floater.element.style.opacity = floater.opacity;
+            }
         })
+        floaters = floaters.filter(floater => floater.opacity >= 0.3)
         window.requestAnimationFrame(frame)
     }
     window.requestAnimationFrame(frame)
