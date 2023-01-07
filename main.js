@@ -82,9 +82,9 @@ function main(){
                 };
             } else {
                 particle.color = {
-                    r: lerp(parent.color.r, 100, (Math.random()-0.02)/50),
-                    g: lerp(parent.color.g, 100, (Math.random()-0.02)/50),
-                    b: lerp(parent.color.b, 100, (Math.random()-0.02)/50),
+                    r: lerp(parent.color.r, 100, (Math.random()-0.1)/50),
+                    g: lerp(parent.color.g, 100, (Math.random()-0.1)/50),
+                    b: lerp(parent.color.b, 100, (Math.random()-0.1)/50),
                 };
             }
             particle.age = parent.age + 1;
@@ -173,11 +173,17 @@ function main(){
                 floater.x += floater.moveX;
                 floater.y += floater.moveY;
                 
+                let anyBounce = false;
                 if(floater.x < 0 || floater.x + floater.width > width*scale){
                     floater.moveX *= -1;
+                    anyBounce = true;
                 }
                 if(floater.y < 0 || floater.y + floater.height > height*scale){
                     floater.moveY *= -1;
+                    anyBounce = true;
+                }
+                if(anyBounce){
+                    floater.rotationSpeed *= -1;
                 }
 
                 floater.element.style.transform = `rotate(${floater.rotation}deg)`;
